@@ -2,11 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const routes = require ('./Routes/route');
+const path = require('path');
 
 PORT = 4001;
 app.use(cors());
 app.use(express.json());
 app.use('/api',routes);
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 

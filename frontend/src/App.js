@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import NavBar from './Components/NavBar';
 import Footer from './Components/Footer';
 import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
+
 
 
 
@@ -20,12 +22,12 @@ const Contact = lazy(() => import('./Components/Contact'));
 const Faq = lazy(() => import('./Components/Faq'));
 const Booknow= lazy(() => import('./Components/Booknow'));
 
-
-
 function App() {
+  
   return (
+  <div>
     <Router>
-      <NavBar />
+     <NavBar />
       <div >
        <Suspense fallback={<div>Loading...</div>}>
         <Routes>
@@ -37,13 +39,15 @@ function App() {
           <Route path="/gallery" element={<Gallery/>} />
           <Route path="/contactus" element={<Contact />} />
           <Route path='/faq' element ={<Faq/>}/>
-          <Route path='/booknow' element ={<Booknow/>}/>
+          <Route path='/booknow' element ={<Booknow/>}/>     
         </Routes>
        </Suspense> 
        
       </div>
       <Footer />
     </Router>
+   
+  </div>
   );
 }
 

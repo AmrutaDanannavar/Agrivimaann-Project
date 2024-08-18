@@ -40,28 +40,27 @@ create  table pilots (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-insert into pilots (name, license_number, phone_number) VALUES 
-('Pilot One', 'LIC123', 'pilotone@example.com'),
-('Pilot Two', 'LIC456', 'pilottwo@example.com');
-
 select * from pilots;
 
-create  table tasks (
+
+
+CREATE TABLE tasks (
     task_id INT AUTO_INCREMENT PRIMARY KEY,
-    pilot_id INT,
-    task_description TEXT NOT NULL,
-    due_date DATE,
+    pilot_id INT NOT NULL,
+    task_name VARCHAR(255) NOT NULL,
+    description TEXT,
     status ENUM('Pending', 'In Progress', 'Completed') DEFAULT 'Pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (pilot_id) REFERENCES pilots(pilot_id)
+    due_date DATE,
+    FOREIGN KEY (pilot_id) REFERENCES pilots(id) ON DELETE CASCADE
 );
 
-insert into tasks (pilot_id, task_description, due_date, status) VALUES 
-(1, 'Inspect drone parts', '2024-09-20', 'Pending'),
-(2, 'Train new pilots', '2024-09-25', 'In Progress');
+INSERT INTO tasks (pilot_id, task_name, description, status, due_date)
+VALUES
+(17, 'Battery replacement', 'Replace the drone\'s battery before the next flight.', 'Pending', '2024-08-22'),
+(18, 'Weather assessment', 'Assess the weather conditions for the next flight.', 'Completed', '2024-08-16');
 
 select * from tasks;
-
+DELETE FROM tasks WHERE task_id= '3';
 
 create table drone_parts (
     part_id INT AUTO_INCREMENT PRIMARY KEY,

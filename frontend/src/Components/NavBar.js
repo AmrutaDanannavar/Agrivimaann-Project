@@ -1,5 +1,5 @@
 import React from 'react';
-import img1 from '../Images/l1.jpg';
+import img1 from '../Images/logo.jpg';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
@@ -9,6 +9,7 @@ const NavBar = () => {
     const [nav, setNav] = useState(false);
     const [isdropdown, setdropdown] = useState(false);
     const [isdropdowncontact, setdropdowncontact] = useState(false)
+    const [isdropdowlogin, setdropdownlogin] = useState(false)
 
     const toggleDropdown = () => {
         setdropdown(!isdropdown);
@@ -16,13 +17,16 @@ const NavBar = () => {
     const toggleDropdownContact = () => {
         setdropdowncontact(!isdropdowncontact);
     };
+    const toggleDropdownlogin = () => {
+        setdropdownlogin(!isdropdowlogin);
+    };
     return (
 
         <div>
-            <div className=' flex flex-row gap-5 md:flex-row items-center md:h-20 bg-color1 p-4 md:p-0 '>
+            <div className=' flex flex-row gap-5 md:flex-row items-center md:h-20 bg-color5 p-4 md:p-0 '>
                 <img src={img1} className='h-14 rounded-full ml-4' />
-                <h1 className=' text-white text-2xl'>AGRIVIMAAN</h1>
-                <ul className='flex gap-8 text-white pl-28 text-xl pr-4 hidden md:flex  '>
+                <h1 className=' text-white text-2xl font-bold'>AGRIVIMAAN</h1>
+                <ul className='flex gap-7 text-white pl-28 text-xl pr-4 hidden md:flex  '>
                     <Link to="/">Home</Link>
                     <Link to="/about">AboutUs</Link>
 
@@ -51,7 +55,18 @@ const NavBar = () => {
                         )}
                     </li>
 
-                    <Link to="/booknow"><button className='bg-lime-500 hover:bg-lime-700 text-white font-bold  px-2 rounded'>Book Now</button></Link>
+                    <Link to="/booknow"><button className='bg-color4 hover:bg-color5 text-white font-bold  px-2 rounded'>Book Now</button></Link>
+
+                    {/* <li onClick={toggleDropdownlogin} className='relative cursor-pointer flex items-center '>
+                        <span className='mr-2'>Login</span>
+                        <FaChevronDown className='ml-2' />
+                        {isdropdowlogin && (
+                            <div className=' absolute top-full left-0 mt-2 w-32 bg-white text-black rounded shadow-lg '>
+                                <Link to="/adminlogin" className='block py-2 px-2 text-center hover:bg-color3 border-b border-white' >Admin</Link>
+
+                            </div>
+                        )}
+                    </li> */}
                 </ul>
 
                 <div onClick={() => setNav(!nav)} className='pr-4  z-10 cursor-pointer text-gray-500 md:hidden'>
@@ -90,6 +105,17 @@ const NavBar = () => {
                         </li>
 
                         <Link to="/booknow"><button className='bg-lime-500 hover:bg-lime-700 text-white font-bold  px-2 rounded}' onClick={() => setNav(!nav)}>Book Now</button></Link>
+
+                        {/* <li onClick={toggleDropdownlogin} className='relative cursor-pointer flex items-center '>
+                            <span className='mr-2'>Login</span>
+                            <FaChevronDown className='ml-2' />
+                            {isdropdowlogin && (
+                                <div className=' absolute top-full left-0 mt-2 w-40 bg-white text-black rounded shadow-lg '>
+                                    <Link to="/adminlogin" className='block py-2 px-4 text-center hover:bg-color3 border-b border-white' >Admin</Link>
+
+                                </div>
+                            )}
+                        </li> */}
                     </ul>
 
                 )}

@@ -3,12 +3,21 @@ module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     extend: {
+      keyframes: {
+        'slide-right': {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        }
+      },
+      animation: {
+        'slide-right': 'slide-right 5s linear infinite',
+      },
       colors: {
-        color1: '#1a2e05', //900
-        color2: '#4d7c0f', //700
-        color3: '#65a30d', //600
-        color4:  '#d9f99d', //300
-        color5: '#ecfccb' //100
+        color1: '#F5F5F5', //900
+        color2: '	#cadeef', //700
+        color3: '#9bd4e4', //600
+        color4:  '#39ace7', //300
+        color5: '#0784b5' //100
         
       },
       fontFamily: {

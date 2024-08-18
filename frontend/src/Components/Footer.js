@@ -8,7 +8,7 @@ import img15 from '../Images/y1.jpg';
 const Footer = () => {
   return (
     <div >
-      <div className='h-92 pl-14 pt-7 bg-color1 text-white pr-14'>
+      <div className='h-92 pl-14 pt-7 bg-color5 text-white pr-14'>
 
         <div className="flex flex-row gap-20 flex-wrap ">
           <div >

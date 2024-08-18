@@ -6,11 +6,11 @@ import img24 from '../Images/hexap.jpg';
 const Product11Lhexa = () => {
   return (
     <div>
-      <div className='bg-color2 h-auto md:pb-14'>
-        <h1 className='text-center text-white text-4xl pt-7'>11L Hexa</h1>
+      <div className='bg-color1 h-auto md:pb-14'>
+        <h1 className='text-center text-black text-4xl pt-7'>11L Hexa</h1>
         <div className='flex flex-col md:flex-row gap-20'>
            <img src={img22} className=' pl-4 md:pl-28 h-64 mt-7'/> 
-           <ul className='text-white text-xl pt-4 md:pt-14 pl-14 pb-4'>
+           <ul className='text-black text-xl pt-4 md:pt-14 pl-14 pb-4'>
              < h1 >Capacity: 16000mAh</h1> 
              <h1 className='pt-4'>Voltage: 50V</h1>
              <h1 className='pt-4'>Discharge Rate: 5C</h1>
@@ -20,7 +20,7 @@ const Product11Lhexa = () => {
         </div>
       </div>
 
-      <div className='bg-color4 h-auto md:pb-14'>
+      <div className='bg-color1 h-auto md:pb-14'>
         <div className='flex flex-col md:flex-row gap-20'>
                 <p className='text-black text-center  pl-4 md:pl-14 text-sm md:text-xl pt-14'>
                 <h1 className=' text-xl md:text-3xl bold pb-7'>Performance you can rely on...</h1>   
@@ -30,10 +30,10 @@ const Product11Lhexa = () => {
         </div>
       </div>
 
-      <div className='bg-color3 h-auto md:pb-14'>
+      <div className='bg-color1 h-auto md:pb-14'>
            <div className='flex flex-col  md:flex-row gap-20'>
              <img src={img24} className='ml-4 md:ml-28 h-72 mt-7 mr-4 '/> 
-                <p className='text-white  text-center pl-4 md:pl-14 text-sm pb-4 md:text-xl md:pt-14 '>
+                <p className='text-black  text-center pl-4 md:pl-14 text-sm pb-4 md:text-xl md:pt-14 '>
                 <h1 className='text-xl md:text-3xl bold pb-7 '>Compact for one man operability ..</h1>   
                 <p>The 11L Hexa drone is designed with a compact and user-friendly build,</p>
                 <p>making it suitable for one-man operability. Its streamlined design allows</p> 

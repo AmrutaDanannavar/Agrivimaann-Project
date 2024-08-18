@@ -53,7 +53,7 @@ const Gallery = () => {
     ]
     return (
         <div>
-            <div className='h-auto bg-color4'>
+            <div className='h-auto bg-color1'>
                 <h1 className='text-black text-xl bold text-center p-4'>Unforgettable Memories with PM DRONES</h1>
                 <h1 className='text-black text-2xl bold text-center p-4'>Explore our captivating agriculture drone gallery, showcasing the beauty and efficiency of drone technology in modern farming.</h1>
                 <div className='flex flex-row flex-wrap pl-7'>
