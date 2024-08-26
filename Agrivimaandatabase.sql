@@ -47,59 +47,80 @@ select * from pilots;
 CREATE TABLE tasks (
     task_id INT AUTO_INCREMENT PRIMARY KEY,
     pilot_id INT NOT NULL,
-    task_name VARCHAR(255) NOT NULL,
-    description TEXT,
+    service_id  VARCHAR(255) NOT NULL,
     status ENUM('Pending', 'In Progress', 'Completed') DEFAULT 'Pending',
     due_date DATE,
-    FOREIGN KEY (pilot_id) REFERENCES pilots(id) ON DELETE CASCADE
+    FOREIGN KEY (pilot_id) REFERENCES pilots(id) ON DELETE CASCADE,
+    FOREIGN KEY (service_id) REFERENCES drone_spraying_services (id) ON DELETE CASCADE
 );
 
-INSERT INTO tasks (pilot_id, task_name, description, status, due_date)
-VALUES
-(17, 'Battery replacement', 'Replace the drone\'s battery before the next flight.', 'Pending', '2024-08-22'),
-(18, 'Weather assessment', 'Assess the weather conditions for the next flight.', 'Completed', '2024-08-16');
+drop table tasks;
 
 select * from tasks;
-DELETE FROM tasks WHERE task_id= '3';
 
-create table drone_parts (
+
+CREATE TABLE drone_parts (
     part_id INT AUTO_INCREMENT PRIMARY KEY,
     part_name VARCHAR(100) NOT NULL,
-    part_type ENUM('Propeller', 'Battery', 'Controller') NOT NULL,
-    quantity INT DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    part_type VARCHAR(50) NOT NULL,
+    stock_quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,   
+    image_path VARCHAR(255)
+    
 );
-
-insert into drone_parts  (part_name, part_type, quantity) VALUES 
-('Propeller A', 'Propeller', 10),
-('Battery B', 'Battery', 20),
-('Controller C', 'Controller', 5);
 
 select * from drone_parts;
 
-create table  drone_spraying_services (
+
+CREATE TABLE drone_spraying_services (
     service_id INT AUTO_INCREMENT PRIMARY KEY,
-    acres FLOAT NOT NULL,
-    filled_type VARCHAR(50) NOT NULL,
-    assigner VARCHAR(100),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    service_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    area_covered DECIMAL(10, 2) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL, 
+    filled_type VARCHAR(100), 
+    duration VARCHAR(100)
 );
-insert into drone_spraying_services (acres, filled_type, assigner) VALUES 
-(50.5, 'Liquid', 'John Doe'),
-(20.0, 'Granular', 'Jane Smith');
+INSERT INTO drone_spraying_services (service_name, description, area_covered, price, filled_type, duration)
+VALUES ('Crop Protection Service', 'A comprehensive crop protection service using organic pesticides.', 50.00, 1200.00, 'Liquid', '3 hours');
+
+INSERT INTO drone_spraying_services (service_name, description, area_covered, price, filled_type, duration)
+VALUES 
+('Weed Control Service', 'Efficient weed control using environmentally safe herbicides.', 40.00, 1000.00, 'Liquid', '2 hours'),
+('Fertilizer Application', 'Precision application of fertilizers to boost crop yield.', 60.00, 1500.00, 'Granular', '4 hours'),
+('Pest Control Service', 'Targeted pest control using advanced insecticides.', 45.00, 1300.00, 'Liquid', '3 hours and 30 minutes');
+
+
+INSERT INTO drone_spraying_services (service_name, description, area_covered, price, filled_type, duration)
+VALUES 
+('Nutrient Spraying', 'Balanced nutrient spraying for optimal plant health.', 50.00, 12000.00, 'Liquid', '2 hours and 15 minutes'),
+('Seed Coating', 'Application of seed coating for better germination.', 30.00, 2800.00, 'Granular', '1 hour 30 minutes'),
+('Fungicide Treatment', 'Effective fungicide treatment to combat plant diseases.', 55.00, 11400.00, 'Liquid', '3 hours'),
+('Herbicide Application', 'Selective herbicide application to control unwanted vegetation.', 70.00, 51700.00, 'Liquid', '2 hours 45 minutes'),
+('Insecticide Application', 'Targeted insecticide spraying to eliminate pests.', 65.00, 2600.00, 'Liquid', '3 hours'),
+('Crop Protection Service', 'Comprehensive crop protection services including pest and disease management.', 75.00, 7800.00, 'Granular', '5 hours'),
+('Growth Regulator Application', 'Application of growth regulators to enhance plant growth and yield.', 80.00, 9000.00, 'Liquid', '4 hours');
+
+
 
 select * from drone_spraying_services;
 
-create table drone_parts_orders (
+CREATE TABLE orders (
     order_id INT AUTO_INCREMENT PRIMARY KEY,
     part_id INT,
     quantity INT NOT NULL,
-    order_date DATE,
+    total_price DECIMAL(10, 2) NOT NULL,
+    customer_name VARCHAR(255) NOT NULL,
+    customer_address TEXT NOT NULL,
+    contact_number VARCHAR(15) NOT NULL,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (part_id) REFERENCES drone_parts(part_id)
 );
+select * from orders;
+ALTER TABLE orders
+ADD COLUMN part_name varchar(250),
+ADD COLUMN shipping_date DATE;
 
-insert into drone_parts_orders (part_id, quantity, order_date) VALUES 
-(1, 5, '2024-08-01'),
-(2, 10, '2024-08-02');
-
-select * from drone_parts_orders; 
+DELETE FROM orders WHERE order_id = 4;
+ALTER TABLE orders
+CHANGE COLUMN total_price price VARCHAR(255);

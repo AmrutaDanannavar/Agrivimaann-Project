@@ -23,7 +23,7 @@ const add_pilot = function (req, res) {
             const add_pilot_query = "INSERT INTO Pilots SET pilot_name = ?, license_number = ?, experience_level = ?, contact_number = ?, email = ?, status = ?, photo = ?";
             const pilot_details = req.body;
 
-            // Include the photo path in the query
+            
             connection.query(add_pilot_query, [
                 pilot_details.pilot_name,
                 pilot_details.license_number,
@@ -92,7 +92,6 @@ const delete_pilot = function (req, res) {
     });
 }
 
-// Update pilot details
 const update_pilot = function (req, res) {
     const id = req.params.id;
     const { pilot_name, license_number, experience_level, contact_number, email, status } = req.body;

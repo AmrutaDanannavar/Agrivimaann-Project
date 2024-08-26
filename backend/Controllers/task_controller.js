@@ -2,14 +2,14 @@ const connection = require('../Mysql/mysql')
 const error_handler = require('../Controllers/error_handler')
 
 const assign_task = function (req, res) {
-    const { pilot_id, task_name, description, status, due_date } = req.body;
+    const {  service_id,  status, due_date ,pilot_id} = req.body;
 
     const insert_task_query = `
-        INSERT INTO tasks (pilot_id, task_name, description, status, due_date) 
-        VALUES (?, ?, ?, ?, ?);
+        INSERT INTO tasks (service_id,  status, due_date ,pilot_id) 
+        VALUES (?, ?, ?, ?);
     `;
 
-    connection.query(insert_task_query, [pilot_id, task_name, description, status, due_date], function (err, results) {
+    connection.query(insert_task_query, [service_id,  status, due_date ,pilot_id], function (err, results) {
         if (err) {
             return error_handler(err, req, res, 400);
         } else {
@@ -24,7 +24,7 @@ const assign_task = function (req, res) {
 
 const get_tasks = function (req, res) {
 
-    const get_tasks_query = "SELECT tasks.task_id, tasks.task_name, tasks.due_date, tasks.status, pilots.pilot_name FROM tasks JOIN pilots ON tasks.pilot_id = pilots.id;  "
+    const get_tasks_query = "SELECT  tasks.task_id,   drone_spraying_services.service_name,   tasks.due_date,  tasks.status,  pilots.pilot_name FROM  tasks JOIN pilots ON tasks.pilot_id =pilots.id JOIN   drone_spraying_services ON tasks.service_id = drone_spraying_services.service_id; "
     connection.query(get_tasks_query, function (error, results) {
         if (error) {
             console.error('Error while querying the database:', error);
@@ -64,12 +64,28 @@ const delete_task = function (req, res) {
     });
 }
 
-// Update pilot details
+const update_task_status = function (req, res) {
+    const { status } = req.body; 
+    const task_id = req.params.task_id;
+    const update_status_query = ` UPDATE tasks  SET status = ? WHERE task_id = ? `;
+
+    
+    connection.query(update_status_query, [status, task_id], (error, results) => {
+        if (error) {
+            console.error('Error updating task status:', error);
+            return res.status(500).json({ message: 'Error updating task status' });
+        }
+        res.json({ message: 'Task status updated successfully' });
+    });
+};
+
+
 
 
 module.exports = {
     assign_task,
     get_tasks,
-    delete_task
+    delete_task,
+   update_task_status
  
 };

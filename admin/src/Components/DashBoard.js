@@ -1,105 +1,224 @@
-import React from 'react'
-import { Link, Outlet, useNavigate, Routes, Route } from 'react-router-dom';
-import  { Suspense, lazy } from 'react';
-
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { Link, useNavigate, Routes, Route } from 'react-router-dom';
+import axios from 'axios';
+import { BASE_URL } from '../config';
+import {
+  FaBars,
+  FaSignOutAlt,
+  FaTasks,
+  FaUserTie,
+  FaCogs,
+  FaPlane,
+  FaBoxOpen,
+  FaRegClipboard,
+} from 'react-icons/fa';
 import image from '../Images/admin.jpg';
-import img3 from '../Images/dparts.jpg';
-import img4 from '../Images/dss1.jpg';
-import img5 from '../Images/o1.jpg';
-import img6 from '../Images/pi1.jpg';
-import img7 from '../Images/task.jpg';
-import img8 from '../Images/re1.jpg';
 
 const Requests = lazy(() => import('./Requests'));
-const Tasks = lazy(()=> import('./Tasks'));
-const Pilots = lazy(()=>import('./Pilots'));
-const DroneParts = lazy(()=> import('./DroneParts'))
-const DronePartsOrders = lazy(()=>import('./DronePartsOrders'));
-const DroneSprayingServices = lazy(()=>import('./DroneSprayingServices'))
+const Tasks = lazy(() => import('./Tasks'));
+const Pilots = lazy(() => import('./Pilots'));
+const DroneParts = lazy(() => import('./DroneParts'));
+const DronePartsOrders = lazy(() => import('./DronePartsOrders'));
+const DroneSprayingServices = lazy(() => import('./DroneSprayingServices'));
 
 const DashBoard = () => {
   const navigate = useNavigate();
-    const username = localStorage.getItem('username');
-    const handleLogout = () => {
-      localStorage.removeItem('username');
-      localStorage.removeItem('user_token');
-      navigate('/'); // Redirect to login page after logout
+  const username = localStorage.getItem('username');
+  const [requestCount, setRequestCount] = useState(0);
+  const [pilotCount, setPilotCount] = useState(0);
+  const [taskCount, setTaskCount] = useState(0);
+  const [serviceCount, setServiceCount] = useState(0);
+  const [partCount, setPartCount] = useState(0);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const [
+          requestResponse,
+          pilotResponse,
+          taskResponse,
+          serviceResponse,
+           partResponse,
+        ] = await Promise.all([
+          axios.get(`${BASE_URL}getrequests`),
+          axios.get(`${BASE_URL}getpilots`),
+          axios.get(`${BASE_URL}gettasks`),
+          axios.get(`${BASE_URL}getservices`),
+          axios.get(`${BASE_URL}getparts`)
+        ]);
+
+        setRequestCount(requestResponse.data.length);
+        setPilotCount(pilotResponse.data.length);
+        setTaskCount(taskResponse.data.length);
+        setServiceCount(serviceResponse.data.length);
+        setPartCount(partResponse.data.length);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('username');
+    localStorage.removeItem('user_token');
+    navigate('/'); // Redirect to login page after logout
   };
-    
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
 
   return (
     <div className="flex h-screen">
-     <div className="flex-1">
-        <div className="flex justify-between w-full items-center bg-color2 h-20">
-          <div className='flex flex-row gap-2 items-center text-black '>
-            
-             <img src={image} alt="Admin" className="h-20 w-20 rounded-full m-4 pt-2 pb-2 mr-4" />
-             <h1 className="text-xl font-bold">{`Welcome, ${username}`}</h1>
-          </div>
-          <div className="flex gap-4 pr-4">
-                        <button 
-                            onClick={() => navigate('/dashboard')}
-                            className='bg-green-900 text-white p-2 rounded hover:bg-green-600'>
-                            Go to Dashboard
-                        </button>
-                        <button 
-                            onClick={handleLogout}
-                            className='bg-red-900 text-white p-2 rounded hover:bg-red-600'>
-                            Logout
-                        </button>
-                    </div>
+      {/* Sidebar */}
+      <div
+        className={`${
+          isSidebarCollapsed ? 'w-20' : 'w-64'
+        } bg-black text-white flex flex-col h-full transition-width duration-300 fixed`}
+      >
+        <div className="flex items-center justify-between h-20 bg-black px-4">
+          {!isSidebarCollapsed && (
+            <div className="flex items-center">
+              <img
+                src={image}
+                alt="Admin"
+                className="h-12 w-12 rounded-full"
+              />
+              <h1 className="text-xl text-white font-bold ml-2">{username}</h1>
+            </div>
+          )}
+          <button
+            onClick={toggleSidebar}
+            className="text-white focus:outline-none"
+          >
+            <FaBars size={24} />
+          </button>
         </div>
-        <div className="h-screen">
+        <nav className="flex flex-col p-4 pt-7 space-y-4">
+          <Link
+            to="requests"
+            className="flex items-center text-white hover:bg-color5 rounded p-2"
+          >
+            <FaRegClipboard size={24} />
+            {!isSidebarCollapsed && (
+              <span className="ml-3 text-md font-medium">Requests</span>
+            )}
+          </Link>
+          <Link
+            to="pilots"
+            className="flex items-center text-white hover:bg-color5 rounded p-2"
+          >
+            <FaUserTie size={24} />
+            {!isSidebarCollapsed && (
+              <span className="ml-3 text-md font-medium">Pilots</span>
+            )}
+          </Link>
+          <Link
+            to="tasks"
+            className="flex items-center text-white hover:bg-color5 rounded p-2"
+          >
+            <FaTasks size={24} />
+            {!isSidebarCollapsed && (
+              <span className="ml-3 text-md font-medium">Tasks</span>
+            )}
+          </Link>
+          <Link
+            to="drone-spraying-services"
+            className="flex items-center text-white hover:bg-color5 rounded p-2"
+          >
+            <FaPlane size={24} />
+            {!isSidebarCollapsed && (
+              <span className="ml-3 text-md font-medium">Spraying Services</span>
+            )}
+          </Link>
+          <Link
+            to="drone-parts"
+            className="flex items-center text-white hover:bg-color5 rounded p-2"
+          >
+            <FaCogs size={24} />
+            {!isSidebarCollapsed && (
+              <span className="ml-3 text-md font-medium">Drone Parts</span>
+            )}
+          </Link>
+          <Link
+            to="drone-parts-order"
+            className="flex items-center text-white hover:bg-color5 rounded p-2"
+          >
+            <FaBoxOpen size={24} />
+            {!isSidebarCollapsed && (
+              <span className="ml-3 text-md font-medium">Parts Orders</span>
+            )}
+          </Link>
+          <button
+            onClick={handleLogout}
+            className="flex items-center text-white bg-red-600 hover:bg-red-500 rounded p-2 mt-auto"
+          >
+            <FaSignOutAlt size={24} />
+            {!isSidebarCollapsed && (
+              <span className="ml-3 text-md font-medium">Logout</span>
+            )}
+          </button>
+        </nav>
+      </div>
+
+      {/* Main Content Area */}
+      <div
+        className={`flex-1 ${
+          isSidebarCollapsed ? 'ml-20' : 'ml-64'
+        } transition-margin duration-300`}
+      >
+        <div className="p-4">
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
-              <Route path="/" element={
-                <div>
-                  <ul className="flex flex-row gap-20 flex-wrap ml-64 mr-28 pt-20 p-4 text-xl">
-                    <li className="flex flex-col hover:bg-color2 justify-center items-center h-40 w-40 bg-color1 rounded-full">
-                      <img src={img8} alt="Requests" />
-                      <Link to="requests" className='text-black font-bold pt-4 text-xl'>Requests</Link>
-                    </li>
-                    <li className="flex flex-col hover:bg-color2 justify-center items-center h-40 w-40 bg-color1 rounded-full">
-                      <img src={img6} alt="Pilots" />
-                      <Link to="pilots" className='text-black font-bold pt-4 text-xl'>Pilots</Link>
-                    </li>
-                    <li className="flex flex-col hover:bg-color2 justify-center items-center h-40 w-40 bg-color1 rounded-full">
-                      <img src={img7} alt="Tasks" className='h-20 w-20' />
-                      <Link to="tasks" className='text-black font-bold pt-4 text-xl'>Tasks</Link>
-                    </li>
-                    <li className="flex flex-col hover:bg-color2 justify-center items-center h-40 w-40 bg-color1 rounded-full">
-                      <img src={img3} alt="Drone Parts" className='h-20 w-20' />
-                      <Link to="drone-parts" className='text-black pt-4 font-bold text-xl'>Drone Parts</Link>
-                    </li>
-                    <li className="flex flex-col hover:bg-color2 justify-center items-center h-40 w-40 rounded-full bg-color1">
-                      <img src={img4} alt="Spraying Services" className='h-20 w-20' />
-                      <Link to="drone-spraying-services" className='text-black font-bold pt-4 text-xl pl-10'>Spraying-Services</Link>
-                    </li>
-                    <li className="flex flex-col hover:bg-color2 justify-center items-center h-40 w-40 rounded-full bg-color1">
-                      <img src={img5} alt="Drone Parts Order" />
-                      <Link to="drone-parts-order" className='text-black pt-4 font-bold text-xl pl-7'>Drone Parts Order</Link>
-                    </li>
-                  </ul>
-                </div>} 
+              <Route
+                path="/"
+                element={
+                  <div className="flex flex-wrap items-center justify-center pt-28 gap-6">
+                    <div className="bg-blue-800 text-blue-100 w-64 p-4 shadow rounded text-center">
+                      <h2 className="text-xl font-bold mb-2">Requests</h2>
+                      <p className="text-3xl font-semibold">{requestCount}</p>
+                    </div>
+                    <div className="bg-teal-800 text-teal-100 w-64 p-4 shadow rounded text-center">
+                      <h2 className="text-xl font-bold mb-2">Pilots</h2>
+                      <p className="text-3xl font-semibold">{pilotCount}</p>
+                    </div>
+                    <div className="bg-green-800 text-green-100 w-64 p-4 shadow rounded text-center">
+                      <h2 className="text-xl font-bold mb-2">Tasks</h2>
+                      <p className="text-3xl font-semibold">{taskCount}</p>
+                    </div>
+                    <div className="bg-purple-800 text-purple-100 w-64 p-4 shadow rounded text-center">
+                      <h2 className="text-xl font-bold mb-2">Services</h2>
+                      <p className="text-3xl font-semibold">{serviceCount}</p>
+                    </div>
+                    <div className="bg-orange-800 text-orange-100 w-64 p-4 shadow rounded text-center">
+                      <h2 className="text-xl font-bold mb-2">Drone Parts</h2>
+                      <p className="text-3xl font-semibold">{partCount}</p>
+                    </div>
+                  </div>
+                }
               />
               <Route path="requests" element={<Requests />} />
               <Route path="pilots" element={<Pilots />} />
               <Route path="tasks" element={<Tasks />} />
               <Route path="drone-parts" element={<DroneParts />} />
-              <Route path="drone-spraying-services" element={<DroneSprayingServices />} />
-              <Route path="drone-parts-order" element={<DronePartsOrders />} />
+              <Route
+                path="drone-spraying-services"
+                element={<DroneSprayingServices />}
+              />
+              <Route
+                path="drone-parts-order"
+                element={<DronePartsOrders />}
+              />
               <Route path="/pilots/*" element={<Pilots />} />
             </Routes>
           </Suspense>
         </div>
-
-        <div className="p-4">
-          <Outlet />
-        </div>
       </div>
-    
-  </div>
-  )
-}
+    </div>
+  );
+};
 
-export default DashBoard
+export default DashBoard;

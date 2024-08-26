@@ -140,9 +140,10 @@ const Pilots = () => {
   );
 
   return (
-    <div>
+    <div className=' min-h-screen'>
       <div className="p-4">
         <ToastContainer />
+        <h1 className='text-center text-2xl mt-2 mb-7 font-bold text-white bg-teal-600 p-4'>Explore the Credentials of Our Skilled Pilots</h1>
         <div className='flex gap-10 justify-center'>
           <input type='text' className='w-96 border h-10 p-4 rounded' placeholder="Search pilot by name or license number" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
@@ -157,10 +158,10 @@ const Pilots = () => {
                 email: '',
                 status: 'active',
               });
-              setIsEditing(false); // Ensure it's set to false for adding new pilot
+              setIsEditing(false); //  it's set to false for adding new pilot
               setIsModalOpen(true);
             }}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-800"
           >
             Add New Pilot
           </button>
@@ -264,8 +265,8 @@ const Pilots = () => {
         <div className="mt-8">
           <table className="w-full bg-color1 border border-gray-200">
             <thead>
-              <tr className='bg-color4 text-white text-xl'>
-                <th className='py-2 px-4 border-b border-r'>S.No</th>
+              <tr className='bg-teal-800 text-white text-xl'>
+                <th className='py-2 px-2 border-b border-r'>S.No</th>
                 <th className='py-2 px-4 border-b border-r'>photo</th>
                 <th className='py-2 px-4 border-b border-r'>Pilot Name</th>
                 <th className='py-2 px-4 border-b border-r'>License Number</th>
@@ -281,12 +282,12 @@ const Pilots = () => {
                 <tr key={index}>
 
                   <td className='py-2 px-4 border-b border-r'>{index + 1}</td>
-                  <td className='py-2 px-4 border-b border-r'>
+                  <td className='py-2 px-2 border-b border-r'>
                     {pilot.photo && (
                       <img
-                        src={`http://localhost:4001/${pilot.photo}`}
+                        src={`${BASE_URL}${pilot.photo}`}
                         alt={pilot.pilot_name}
-                        className='w-40 h-40 rounded p-2 '
+                        className='w-52 h-30 rounded p-2 '
                       />
                     )}
                   </td>
