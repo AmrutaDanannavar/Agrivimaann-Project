@@ -1,47 +1,26 @@
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = 'MY_SECRET_FOR_FSD_PROJECT'; 
 
-const jwt = require('jsonwebtoken')
-const JWT_SECRET = 'MY_SECRET_FOR_FSD_PROJECT'
+const jwt_verify = function (req, res, next) {
+    const authHeader = req.headers['authorization']; // Retrieve the token from the header
+    const token = authHeader && authHeader.split(' ')[1]; // Extract token
 
-
-const jwt_verify = function( req,res,next){
-   const jwt_token = req.headers["authorization"]
-   if(!jwt_token){
-    res.statusCode = 401
-    const response ={
-        "message":"send the token"
+    if (!token) {
+        return res.status(401).json({ message: "Token is missing. Please provide a valid token." });
     }
-    res.set({
-        "content-type":"Application/json"
-    })
-    res.send(response)
-   }else{
-    jwt.verify(jwt_token,JWT_SECRET,function(err,jwt_decoded){
-      if(err){
-        if(err.name == "TokenExpiredError"){
-            res.statusCode = 401
-            response ={
-                "message":"Token is expired"
+
+    jwt.verify(token, JWT_SECRET, function (err, jwt_decoded) {
+        if (err) {
+            if (err.name === "TokenExpiredError") {
+                return res.status(401).json({ message: "Token is expired." });
+            } else {
+                return res.status(401).json({ message: "Token is invalid." });
             }
-            res.set({
-                "content-type":"application/json"
-            })
-            res.send(response)
+        } else {
+            res.locals = jwt_decoded;
+            next();
         }
-        else{
-            res.statusCode =401
-            response={
-                "message":"token is invalid"
-            } 
-            res.set({
-                "content-type":"application/json"
-            })
-            res.send(response)
-        }
-      }else{
-        res.locals = jwt_decoded
-        next()
-      }
-    })
-   }
-}
-module.exports =jwt_verify
+    });
+};
+
+module.exports = jwt_verify;

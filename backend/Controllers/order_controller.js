@@ -2,14 +2,14 @@ const connection = require('../Mysql/mysql')
 const error_handler = require('../Controllers/error_handler')
 
 const order_drone_parts = function (req, res) {
-    const {  part_id, quantity,price, customer_name, customer_address, contact_number,order_date,part_name,shipping_date} = req.body;
+    const {  part_id, quantity,price, customer_name, customer_address, contact_number,order_date,part_name,shipping_date,status} = req.body;
 
     const insert_Order_query = `
-        INSERT INTO orders(part_id, quantity,price, customer_name, customer_address, contact_number,order_date,part_name,shipping_date) 
-        VALUES (?, ?, ?, ?,?,?,?,?,?);
+        INSERT INTO orders(part_id, quantity,price, customer_name, customer_address, contact_number,order_date,part_name,shipping_date,status) 
+        VALUES (?, ?, ?, ?,?,?,?,?,?,?);
     `;
 
-    connection.query(insert_Order_query, [part_id, quantity,price, customer_name, customer_address, contact_number,order_date,part_name,shipping_date], function (err, results) {
+    connection.query(insert_Order_query, [part_id, quantity,price, customer_name, customer_address, contact_number,order_date,part_name,shipping_date,status], function (err, results) {
         if (err) {
             return error_handler(err, req, res, 400);
         } else {
@@ -43,12 +43,25 @@ const get_orders = function (req, res) {
     });
 }
 
-
+const update_order_status = function (req, res) {
+    const { status } = req.body; 
+    const order_id = req.params.order_id;
+    const update_status_query = ` UPDATE orders SET status = ? WHERE order_id = ? `;
+    
+    connection.query(update_status_query, [status, order_id], (error, results) => {
+        if (error) {
+            console.error('Error updating order status:', error);
+            return res.status(500).json({ message: 'Error updating order status' });
+        }
+        res.json({ message: 'Order status updated successfully' });
+    });
+};
 
 
 
 module.exports = {
     order_drone_parts,
-    get_orders
+    get_orders,
+    update_order_status
  
 };

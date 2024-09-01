@@ -95,15 +95,15 @@ const Contact = () => {
               <textarea type='text' className=' w-52 md:w-80 h-14 rounded ml-4 ' name='message' value={formData.message} onChange={handleChange} />
             </div>
             <div className='pt-4'>
-              <label className='pl-4  md:pb-0 pb-4 text-black'>Require details for</label>
-              <select className='w-43 ml-1 rounded h-10' name='detailsfor' value={formData.detailsfor} onChange={handleChange} required>
+              <label className='pl-4  pb-4 text-black'>Require details for</label><br/>
+              <select className='w-80 ml-4 rounded h-10 mt-2' name='detailsfor' value={formData.detailsfor} onChange={handleChange} required>
                 <option>Drone Spray</option>
                 <option>Purchase a Drone</option>
                 <option>Become a Drone Partner</option>
                 <option>Others</option>
               </select>
             </div>
-            <ReCAPTCHA className=' w-52 md:w-80 h-10 rounded ml-4 rounded pt-4 '
+            <ReCAPTCHA className=' w-80 h-10 rounded ml-4 rounded pt-4 '
               
               sitekey="6Lf7CCMqAAAAAEMxIczP1vlHXNlCBVQ8ARzK9hxM" 
               onChange={handleCaptcha}

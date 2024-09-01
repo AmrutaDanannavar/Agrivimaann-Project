@@ -4,9 +4,7 @@ const error_handler = require('../Controllers/error_handler')
 
 
 const add_request = function(req, res) {
-    const { email } = req.body;
-
-    
+    const { email } = req.body;    
     const user_exists_query = "SELECT * FROM requests WHERE email = ?;";
     connection.query(user_exists_query, [email], function(err, results) {
         if (err) {
@@ -36,7 +34,6 @@ const add_request = function(req, res) {
 };
 
 const get_requests = function(req, res) {
-    
     const get_request_query = "select * from requests;  ";
     connection.query(get_request_query ,  function(error, results) {
         if (error) {
@@ -56,9 +53,30 @@ const get_requests = function(req, res) {
         }
     });
 }
+const delete_request = function (req, res) {
+
+    const id = req.params.id;
+
+    const delete_query = "DELETE FROM requests WHERE id = ?";
+    connection.query(delete_query, [id], function (error, results) {
+        if (error) {
+            return error_handler("there is an error while deleting the book", req, res, 400);
+        } else {
+            if (results.affectedRows === 0) {
+                res.statusCode = 404;
+                res.send({ "message": "Request not found" });
+            } else {
+                res.set({ "content-type": "application/json" });
+                res.statusCode = 200;
+                res.send({ "message": "Request deleted successfully" });
+            }
+        }
+    });
+}
 
 module.exports = {
    add_request,
-   get_requests
+   get_requests,
+   delete_request
     
 };

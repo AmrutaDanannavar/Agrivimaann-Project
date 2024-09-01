@@ -9,7 +9,7 @@ const DroneParts = () => {
     const [partType, setPartType] = useState('');
     const [stockQuantity, setStockQuantity] = useState('');
     const [price, setPrice] = useState('');
-    const [image, setImage] = useState(null);
+    const [status, setStatus] = useState('');
     const [droneParts, setDroneParts] = useState([]);
     const [showForm, setShowForm] = useState(false);
     const [photo, setPhoto] = useState(null);
@@ -17,11 +17,11 @@ const DroneParts = () => {
     const [showOrderForm, setShowOrderForm] = useState(false);
     const [quantity, setQuantity] = useState(1);
     const [customerName, setCustomerName] = useState('');
-    const [orderDate,setOrderDate] = useState('')
+    const [orderDate, setOrderDate] = useState('')
     const [customerAddress, setCustomerAddress] = useState('');
     const [contactNumber, setContactNumber] = useState('');
     const [selectedPart, setSelectedPart] = useState(null);
-    const[shippingDate,setShippingDate] = useState('')
+    const [shippingDate, setShippingDate] = useState('')
 
     useEffect(() => {
         fetchParts(); // Fetch all parts when component loads
@@ -47,7 +47,8 @@ const DroneParts = () => {
         formData.append('part_type', partType);
         formData.append('stock_quantity', stockQuantity);
         formData.append('price', price);
-        formData.append('image', photo); // Use `photo` state here
+        formData.append('image', photo); 
+        formData.append('status',status)
 
         try {
             const response = await axios.post(`${BASE_URL}addpart`, formData, {
@@ -82,12 +83,13 @@ const DroneParts = () => {
             part_name: selectedPart.part_name,
             part_type: selectedPart.part_type,
             price: selectedPart.price * quantity,
-            quantity:quantity,
+            quantity: quantity,
             customer_name: customerName,
             customer_address: customerAddress,
             contact_number: contactNumber,
-            order_date: new Date().toISOString().split('T')[0] ,
-            shipping_date :new Date().toISOString().split('T')[0]
+            order_date: new Date().toISOString().split('T')[0],
+            shipping_date: new Date().toISOString().split('T')[0],
+            status: 'Pending'
         };
 
         try {
@@ -99,6 +101,7 @@ const DroneParts = () => {
             setCustomerAddress('');
             setContactNumber('');
             setShippingDate('');
+            setStatus('Pending')
             setSelectedPart(null);
             setShowOrderForm(false); // Close the order form
             fetchParts(); // Refresh the parts list to reflect the updated stock
@@ -109,10 +112,17 @@ const DroneParts = () => {
     };
 
     const handleQuantityChange = (e) => {
-        const newQuantity = e.target.value;
+        const newQuantity = parseInt(e.target.value, 10);
         setQuantity(newQuantity);
+
+        // Update the price based on the selected part and the new quantity
         setPrice(selectedPart.price * newQuantity);
+
+        // Adjust the stock quantity based on the quantity ordered
+        const stockQuantity = selectedPart.stockQuantity - newQuantity;
+        setStockQuantity(stockQuantity > 0 ? stockQuantity : 0);
     };
+
     const filteredDroneParts = droneParts.filter(part =>
         part.part_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         part.part_type.toLowerCase().includes(searchQuery.toLowerCase())
@@ -203,7 +213,7 @@ const DroneParts = () => {
                         <img src={`${BASE_URL}${part.image_path}`} alt={part.part_name} className="w-full h-40 w-40 object-cover rounded-t-lg mb-4" />
                         <h3 className="text-xl font-bold mb-2">{part.part_name}</h3>
                         <p className="text-gray-600">Type: {part.part_type}</p>
-                        <p className="text-gray-600">Stock: {part.stock_quantity}</p>
+                        <p className="text-gray-600" onChange={handleQuantityChange}>Stock: {part.stock_quantity}</p>
                         <p className="text-gray-600">Price:  Rs.{part.price}</p>
                         <button
                             onClick={() => {
@@ -221,129 +231,138 @@ const DroneParts = () => {
             </div>
             {/* order now form  */}
             {showOrderForm && selectedPart && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        <div className="bg-white p-4 rounded-lg w-auto shadow-lg relative max-h-screen overflow-y-auto">
-            <button
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-                onClick={() => setShowOrderForm(false)}
-            >
-                X
-            </button>
-            <h2 className="text-2xl font-bold mb-4">Order {selectedPart.part_name}</h2>
-            <form onSubmit={handleOrderSubmit}>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label className="block mb-2 text-sm font-bold">Part Type:</label>
-                        <input
-                            type="text"
-                            value={selectedPart.part_type}
-                            readOnly
-                            className="p-2 border border-gray-300 rounded w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-sm font-bold">Price per Unit:</label>
-                        <input
-                            type="number"
-                            value={selectedPart.price}
-                            readOnly
-                            className="p-2 border border-gray-300 rounded w-full"
-                        />
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white p-4 rounded-lg w-auto shadow-lg relative max-h-screen overflow-y-auto">
+                        <button
+                            className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                            onClick={() => setShowOrderForm(false)}
+                        >
+                            X
+                        </button>
+                        <h2 className="text-2xl font-bold mb-4">Order {selectedPart.part_name}</h2>
+                        <form onSubmit={handleOrderSubmit}>
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Part Type:</label>
+                                    <input
+                                        type="text"
+                                        value={selectedPart.part_type}
+                                        readOnly
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Price per Unit:</label>
+                                    <input
+                                        type="number"
+                                        value={selectedPart.price}
+                                        readOnly
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Quantity:</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={selectedPart.stock_quantity}
+                                        value={quantity}
+                                        onChange={handleQuantityChange}
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Total Price:</label>
+                                    <input
+                                        type="number"
+                                        value={price}
+                                        readOnly
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Customer Name:</label>
+                                    <input
+                                        type="text"
+                                        value={customerName}
+                                        onChange={(e) => setCustomerName(e.target.value)}
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Order Date:</label>
+                                    <input
+                                        type="date"
+                                        value={orderDate}
+                                        onChange={(e) => setOrderDate(e.target.value)}
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Shipping Date:</label>
+                                    <input
+                                        type="date"
+                                        value={shippingDate}
+                                        onChange={(e) => setShippingDate(e.target.value)}
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block mb-2 text-sm font-bold">Status:</label>
+                                    <input
+                                        type="text"
+                                        value="Pending"
+                                        readOnly
+                                        className="p-2 border border-gray-300 rounded w-full"
+                                    />
+                                </div>
+                            </div>
+                         <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div className="mb-4">
+                                <label className="block mb-2 text-sm font-bold">Customer Address:</label>
+                                <textarea
+                                    value={customerAddress}
+                                    onChange={(e) => setCustomerAddress(e.target.value)}
+                                    className="p-2 border border-gray-300 rounded w-full"
+                                    rows="1"
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block mb-2 text-sm font-bold">Contact Number:</label>
+                                <input
+                                    type="text"
+                                    value={contactNumber}
+                                    onChange={(e) => setContactNumber(e.target.value)}
+                                    className="p-2 border border-gray-300 rounded w-full"
+                                    required
+                                />
+                            </div>
+                         </div>
+                            <button
+                                type="submit"
+                                className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 w-full"
+                            >
+                                Place Order
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label className="block mb-2 text-sm font-bold">Quantity:</label>
-                        <input
-                            type="number"
-                            min="1"
-                            max={selectedPart.stock_quantity}
-                            value={quantity}
-                            onChange={handleQuantityChange}
-                            className="p-2 border border-gray-300 rounded w-full"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-sm font-bold">Total Price:</label>
-                        <input
-                            type="number"
-                            value={price}
-                            readOnly
-                            className="p-2 border border-gray-300 rounded w-full"
-                        />
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label className="block mb-2 text-sm font-bold">Customer Name:</label>
-                        <input
-                            type="text"
-                            value={customerName}
-                            onChange={(e) => setCustomerName(e.target.value)}
-                            className="p-2 border border-gray-300 rounded w-full"
-                            required
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-2 text-sm font-bold">Order Date:</label>
-                        <input
-                            type="date"
-                            value={orderDate}
-                            onChange={(e) => setOrderDate(e.target.value)}
-                            className="p-2 border border-gray-300 rounded w-full"
-                            required
-                        />
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label className="block mb-2 text-sm font-bold">Shipping Date:</label>
-                        <input
-                            type="date"
-                            value={shippingDate}
-                            onChange={(e) => setShippingDate(e.target.value)}
-                            className="p-2 border border-gray-300 rounded w-full"
-                            required
-                        />
-                    </div>
-                </div>
-
-                <div className="mb-4">
-                    <label className="block mb-2 text-sm font-bold">Customer Address:</label>
-                    <textarea
-                        value={customerAddress}
-                        onChange={(e) => setCustomerAddress(e.target.value)}
-                        className="p-2 border border-gray-300 rounded w-full"
-                        rows="3"
-                        required
-                    />
-                </div>
-
-                <div className="mb-4">
-                    <label className="block mb-2 text-sm font-bold">Contact Number:</label>
-                    <input
-                        type="text"
-                        value={contactNumber}
-                        onChange={(e) => setContactNumber(e.target.value)}
-                        className="p-2 border border-gray-300 rounded w-full"
-                        required
-                    />
-                </div>
-
-                <button
-                    type="submit"
-                    className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 w-full"
-                >
-                    Place Order
-                </button>
-            </form>
-        </div>
-    </div>
-)}
+            )}
 
 
 

@@ -24,13 +24,17 @@ CREATE TABLE book_now (
     
 select * from book_now;    
 
-create  table  admins (
+create  table  Admin (
     admin_id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-select * from admins;
+select * from Admin;
+
+UPDATE Admin 
+SET password = '$2b$12$TufecodQOEHNu7EFWimpUe79a/fXAhaDvIwqGHYWb1JqTYn92twxC'
+WHERE id= '1';
 
 create  table pilots (
     pilot_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -121,6 +125,9 @@ ALTER TABLE orders
 ADD COLUMN part_name varchar(250),
 ADD COLUMN shipping_date DATE;
 
-DELETE FROM orders WHERE order_id = 4;
+DELETE FROM orders WHERE order_id = 14;
 ALTER TABLE orders
 CHANGE COLUMN total_price price VARCHAR(255);
+
+ALTER TABLE orders
+ADD status varchar(50);

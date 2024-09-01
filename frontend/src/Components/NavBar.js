@@ -1,5 +1,5 @@
 import React from 'react';
-import img1 from '../Images/logo.jpg';
+import img1 from '../Images/logo1.jpg';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
@@ -24,9 +24,9 @@ const NavBar = () => {
 
         <div>
             <div className=' flex flex-row gap-5 md:flex-row items-center md:h-20 bg-color5 p-4 md:p-0 '>
-                <img src={img1} className='h-14 rounded-full ml-4' />
-                <h1 className=' text-white text-2xl font-bold'>AGRIVIMAAN</h1>
-                <ul className='flex gap-7 text-white pl-28 text-xl pr-4 hidden md:flex  '>
+                <img src={img1} className='h-14 w-14 rounded-full ml-4' />
+                <h1 className=' text-white text-2xl font-bold'>AGRIVIMAANN</h1>
+                <ul className='flex gap-6 text-white pl-7 text-xl pr-4 hidden md:flex  '>
                     <Link to="/">Home</Link>
                     <Link to="/about">AboutUs</Link>
 

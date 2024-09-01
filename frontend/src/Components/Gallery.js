@@ -58,7 +58,7 @@ const Gallery = () => {
                 <h1 className='text-black text-2xl bold text-center p-4'>Explore our captivating agriculture drone gallery, showcasing the beauty and efficiency of drone technology in modern farming.</h1>
                 <div className='flex flex-row flex-wrap pl-7'>
                     {gallery.map((photo) => (
-                        <img src={photo.img} className='w-72 h-52 p-4' />
+                        <img src={photo.img} className='w-64 h-52 p-2' />
                     ))}
                 </div>
             </div>

@@ -12,7 +12,7 @@ const Footer = () => {
 
         <div className="flex flex-row gap-20 flex-wrap ">
           <div >
-            <h2 className="text-xl font-bold mb-4">Agrivimaan</h2>
+            <h2 className="text-xl font-bold mb-4">AGRIVIMAANN</h2>
             <p>
               Leading the way in precision agriculture and
             </p>
@@ -33,7 +33,7 @@ const Footer = () => {
           </div>
 
           {/* Contact Info */}
-          <div className='md:pl-28'>
+          <div className='pl-14'>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <p>123 Agriculture Road, Green Valley, CA</p>
             <p>Email: info@agrivimaan.com</p>

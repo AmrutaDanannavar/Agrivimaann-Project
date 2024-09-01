@@ -1,5 +1,5 @@
 import React from 'react';
-import img16 from '../Images/about5.jpg';
+import img16 from '../Images/bg2.jpg';
 import img17 from '../Images/ap1.jpg';
 import img18 from '../Images/apm1.jpg';
 import img19 from '../Images/hed.jpg';
@@ -51,9 +51,9 @@ const About = () => {
       <div className='bg-color2 py-20 h-auto'>
         <h1 className='text-center text-black text-xl'>WHAT WE DO</h1>
         <h1  className='text-center text-black text-3xl pt-7'>Provide Drone and Aerial Photography Service</h1>
-        <div className=' flex flex-col md:flex-row gap-20  pl-7 md:pl-28 pt-28'>
+        <div className=' flex flex-col md:flex-row gap-20  pl-20 pt-28'>
           {cards.map((card)=>(
-            <div className=' relative w-72 h-52 bg-color5'>
+            <div className=' relative w-64 h-52 bg-color5'>
               <img src={card.img} className='rounded-full absolute -top-14 -left-14 h-28 w-28 rounded-full object-cover '/>
               <h1 className='text-white text-center text-xl pt-14'>{card.name}</h1>
               <p className='text-white text-center text-sm pt-4'>{card.desc}</p>

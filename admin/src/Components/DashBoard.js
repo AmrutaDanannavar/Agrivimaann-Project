@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import img2 from '../Images/log02.png';
 import { Link, useNavigate, Routes, Route } from 'react-router-dom';
 import axios from 'axios';
 import { BASE_URL } from '../config';
@@ -13,6 +14,7 @@ import {
   FaRegClipboard,
 } from 'react-icons/fa';
 import image from '../Images/admin.jpg';
+import img1 from '../Images/bg2.jpg';
 
 const Requests = lazy(() => import('./Requests'));
 const Tasks = lazy(() => import('./Tasks'));
@@ -33,19 +35,41 @@ const DashBoard = () => {
 
   useEffect(() => {
     const fetchCounts = async () => {
+      const token = localStorage.getItem('user_token'); // Retrieve the token
+
       try {
         const [
           requestResponse,
           pilotResponse,
           taskResponse,
           serviceResponse,
-           partResponse,
+          partResponse,
         ] = await Promise.all([
-          axios.get(`${BASE_URL}getrequests`),
-          axios.get(`${BASE_URL}getpilots`),
-          axios.get(`${BASE_URL}gettasks`),
-          axios.get(`${BASE_URL}getservices`),
-          axios.get(`${BASE_URL}getparts`)
+          axios.get(`${BASE_URL}getrequests`, {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }),
+          axios.get(`${BASE_URL}getpilots`, {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }),
+          axios.get(`${BASE_URL}gettasks`, {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }),
+          axios.get(`${BASE_URL}getservices`, {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }),
+          axios.get(`${BASE_URL}getparts`, {
+            headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+          }),
         ]);
 
         setRequestCount(requestResponse.data.length);
@@ -55,11 +79,18 @@ const DashBoard = () => {
         setPartCount(partResponse.data.length);
       } catch (error) {
         console.error('Error fetching data:', error);
+
+        if (error.response && error.response.status === 401) {
+          localStorage.removeItem('username');
+          localStorage.removeItem('user_token');
+          navigate('/'); // Redirect to login page after logout
+        }
       }
     };
 
     fetchCounts();
-  }, []);
+  }, [navigate]);
+
 
   const handleLogout = () => {
     localStorage.removeItem('username');
@@ -72,7 +103,7 @@ const DashBoard = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex "  >
       {/* Sidebar */}
       <div
         className={`${
@@ -92,7 +123,7 @@ const DashBoard = () => {
           )}
           <button
             onClick={toggleSidebar}
-            className="text-white focus:outline-none"
+            className="text-white focus:outline-none ml-2"
           >
             <FaBars size={24} />
           </button>
@@ -170,13 +201,15 @@ const DashBoard = () => {
           isSidebarCollapsed ? 'ml-20' : 'ml-64'
         } transition-margin duration-300`}
       >
-        <div className="p-4">
+        <div className="p-4" >
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
               <Route
                 path="/"
                 element={
-                  <div className="flex flex-wrap items-center justify-center pt-28 gap-6">
+                  <div  className='h-screen bg-no-repeat bg-cover'style={{ backgroundImage: `url(${img1})` }}>
+                  <div className="flex flex-wrap items-center justify-center  gap-5 pt-28" >
+
                     <div className="bg-blue-800 text-blue-100 w-64 p-4 shadow rounded text-center">
                       <h2 className="text-xl font-bold mb-2">Requests</h2>
                       <p className="text-3xl font-semibold">{requestCount}</p>
@@ -197,6 +230,7 @@ const DashBoard = () => {
                       <h2 className="text-xl font-bold mb-2">Drone Parts</h2>
                       <p className="text-3xl font-semibold">{partCount}</p>
                     </div>
+                  </div>
                   </div>
                 }
               />

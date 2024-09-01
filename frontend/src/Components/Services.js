@@ -50,7 +50,7 @@ const Services = () => {
       <div className='bg-color1 h-auto'>
         <h1 className='text-center text-black text-xl pt-14'>OUR EXPERTISE</h1>
         <h1 className='text-center text-black text-3xl pt-7'>Empowering Farmers with Precision Drones</h1>
-        <div className=' flex flex-col md:flex-row gap-20 pl-14 md:pl-28 pt-14 pb-4'>
+        <div className=' flex flex-col md:flex-row gap-20 pl-7  pt-14 pb-4'>
           {cards.map((card) => (
             <div className='  w-72 h-72 bg-color4 relative hover:scale-110 duration-300 rounded'>
               <img src={card.img} className='m-4 h-46 w-64  object-cover ' />
